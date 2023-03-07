@@ -29,13 +29,19 @@ then
     echo "Este directorio ya existe"
     echo "Desea borrarlo s/n"
     read -t5 respuesta #si en 5 segundos no se responde no se borra, -tX controla el tiempo que debe pasar para responder, X=segundos
+    if [ -z $respuesta ] #controlamos que la variable no este vacia. si lo esta, ponemos n para que se salte el siguiente if. -z comprueba que la longitud sea igual a cero
+    then
+        respuesta=n
+    fi
     if [ $respuesta == "s" ]
     then 
         rm -r $1   #rm -r para eliminar un directorio, en este caso se elimina el directo que se ha pasado por el primer argumento
         echo "El directorio se ha eliminado"
         mkdir $1 #mkdir para crear un directorio
     fi
-    
+else #si no existe el directorio, lo creamos
+    echo Creando directorio...
+    mkdir $1
 fi
 for i in $(seq $2) #$(seq $n) es como poner for(i=0; i<n; i++)
 do
