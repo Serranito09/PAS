@@ -5,8 +5,9 @@
 #indicara el orden de cada fichero y tambien otro numero que indicara el numero de caracteres
 #del mismo asi como el numero de veces que aparece un determinado caracter que se le solicita al
 #usuario. Si el usuario no indica el caracter en 5 segundos, utiliza la letra "a".
-#A continuacion se muestra un ejemplo de ejecucion
+
 #!/bin/bash
+i=0
 
 if [ $# -ne 2 ] #control de argumentos
 then
@@ -14,10 +15,23 @@ then
     exit
 fi
 
-for i in $(find $1)
+echo Que caracter quieres contar?
+read -n1 caracter_int
+
+ficheros=$(find $1 -maxdepth 2 -type f -name "*.$2" -printf "%f\n" )
+
+echo -e "\n"FICHEROS:"\n"
+
+for fichero in $ficheros
 do
-    for j in $(find -name "*.sh")
+    caracteres=$(echo -n $fichero | wc -m)
+    for caracter in $caracteres
     do
-        ls
+        if [ grep $caracter = $caracter_int ]
+        then
+            cont=$[$cont+1]
+        fi
     done
+    echo -e  '  ' $i '\t'  $fichero $caracteres $cont
+    i=$[$i+1]
 done
