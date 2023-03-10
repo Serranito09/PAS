@@ -34,7 +34,7 @@ echo "cambiando permisos de directorios"
 for i in $(find  $1) #esto nos sirve para buscar todo lo que haya dentro del directorio que nos pasan por lineas de argumentos
 
 do
-    if [ -d $i ] #Comporbamos si es un directorio lo que se ha encontrado
+    if [ -d $i ] #Comprobamos si es un directorio lo que se ha encontrado
         then
         chmod u+rwx $i #Al usuario le añadimos permisos de escritura,lectura y ejecucion
         chmod g+rx-w $i #Al grupo le añadamios permisos de lectura y ejecuccion,y le hemos quitado escritura

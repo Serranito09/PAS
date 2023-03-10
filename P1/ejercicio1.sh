@@ -62,3 +62,4 @@ done
 # para salir del script--> exit
 # -tX controla el tiempo que debe pasar para responder, X=segundos
 # rm -r para eliminar un directorio --> rm -r $directorio
+# -z comprueba que la longitud sea igual a cero -> -z $var
