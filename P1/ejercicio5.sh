@@ -12,15 +12,16 @@
 if [ $# -ne 2 ] #control de argumentos
 then
     echo "Argumentos incorrectos. Uso: ./ejercicio5.sh <ruta_directorio> <tam_bytes>"
+    exit
 fi
-aux=0
+
 ficheros=$(find $1 -type f) #buscamos los ficheros (-type f) en el directorio introducido-->$1
 for fichero in $ficheros 
 do
     tamano=$(stat -c "%s" $fichero) #stat te devuelve informacion sobre los ficheros. stat -c "%s" te devuelve solo el tamaño
     fecha=$(stat -c "%w" $fichero) #w para la fecha de creacion (legible)
     permisos=$(stat -c "%A" $fichero) #A para la cadena de permisos
-    if [ -G $fichero ] && [ -x $fichero ] comprobamos si el fichero puede ejecutarlo el usuario
+    if [ -O $fichero ] && [ -x $fichero ] #comprobamos si el fichero puede ejecutarlo el usuario
     then 
         ejecucion=1
     else
