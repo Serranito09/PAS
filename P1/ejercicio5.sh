@@ -13,15 +13,30 @@ if [ $# -ne 2 ] #control de argumentos
 then
     echo "Argumentos incorrectos. Uso: ./ejercicio5.sh <ruta_directorio> <tam_bytes>"
 fi
-ficheros=$(find $1 -type f) #buscamos en el directorio introducido-->$1,-maxdepth nos sirve para indicar la profundidad
-for x in $ficheros 
+aux=0
+ficheros=$(find $1 -type f) #buscamos los ficheros (-type f) en el directorio introducido-->$1
+for fichero in $ficheros 
 do
-   tamano=$(stat -c "%s" $x)
-   fecha=$(stat -c "%w" $x)
-   permisos=$(stat -c "%A" $x)
-   ejecucion=$(stat -c "%T" $x)
-    if [ $tamano -gt $2 ]
+    tamano=$(stat -c "%s" $fichero) #stat te devuelve informacion sobre los ficheros. stat -c "%s" te devuelve solo el tamaño
+    fecha=$(stat -c "%w" $fichero) #w para la fecha de creacion (legible)
+    permisos=$(stat -c "%A" $fichero) #A para la cadena de permisos
+    if [ -G $fichero ] && [ -x $fichero ] comprobamos si el fichero puede ejecutarlo el usuario
+    then 
+        ejecucion=1
+    else
+        ejecucion=0
+    fi
+    if [ $tamano -gt $2 ] #comprobamos si el fichero es mas grande que el tamaño pasado por argumento
     then
-        echo $(basename $x)"; "$fecha"; "$tamano"; "$permisos"; "$ejecucion
-    fi 
-done
+        echo $(basename $fichero)"; "$fecha"; "$tamano"; "$permisos"; "$ejecucion
+    fi
+done | column -t | sort -k5 -rn #utilizamos tuberias, primero para ordenarlo por columnas y
+# con -t especificamos que deben de tener el mismo ancho y lo mandamos mediante a una tuberia para que 
+# ordene de mayor a menor, con el -k indicamos la columna que queremos ordenar en este caso la 5 y  
+# con el -rn de mayor a menor. si quitamos la r es de menor a mayor
+
+# comandos utilizados
+# stat -c "%caracter" -> para mostrar un campo determinado de un fichero. para ver que caracter poner -> man stat
+# basename $directorio/fichero -> mostrar el nombre sin su ruta
+
+# PARA VER COMANDOS PARA COMPARAR FICHEROS, ETC: man test
