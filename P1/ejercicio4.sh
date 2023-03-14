@@ -37,7 +37,7 @@ do
 
     num_veces=0 #reiniciar la variable global
     i=$[$i+1] #i++
-done
+done # |sort | nl -> en vez de i=$[$i+1]
 
 # comandos utilizados
 # -ne indica si es igual o no 

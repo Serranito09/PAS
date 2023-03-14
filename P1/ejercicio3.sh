@@ -36,7 +36,7 @@ then
     mkdir $2
 fi
 
-nombre=$1_$USER'_'$(date +%s) #creamos el nombre del tar
+nombre=$1_$USER'_'$(date +%s) #creamos el nombre del tar. poner entre comillas
 tar -cvf  $nombre.tar.gz $1 #creamos el tar
 mv $nombre.tar.gz ./$2 #movemos el tar al directorio de destino
 

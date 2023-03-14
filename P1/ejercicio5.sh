@@ -21,17 +21,22 @@ do
     tamano=$(stat -c "%s" $fichero) #stat te devuelve informacion sobre los ficheros. stat -c "%s" te devuelve solo el tamaño
     fecha=$(stat -c "%w" $fichero) #w para la fecha de creacion (legible)
     permisos=$(stat -c "%A" $fichero) #A para la cadena de permisos
-    if [ -O $fichero ] && [ -x $fichero ] #comprobamos si el fichero puede ejecutarlo el usuario
+    if [ -x $fichero ] #comprobamos si el fichero puede ejecutarlo el usuario
     then 
         ejecucion=1
     else
         ejecucion=0
     fi
-    if [ $tamano -gt $2 ] #comprobamos si el fichero es mas grande que el tamaño pasado por argumento
+    if [ $tamano -ge $2 ] #comprobamos si el fichero es mas grande que el tamaño pasado por argumento
     then
-        echo $(basename $fichero)"; "$fecha"; "$tamano"; "$permisos"; "$ejecucion
+        echo "$(basename $fichero); $fecha; $tamano; $permisos; $ejecucion"
     fi
-done | column -t | sort -k5 -rn #utilizamos tuberias, primero para ordenarlo por columnas y
+done | sort -nr -k3 -t ";" #con el sort -k3 ordenamos por la tercera columna, con -t ";" le decimos que las comillas se separan por ;
+
+# OTRA FORMA DE HACERLO:
+# done | column -t | sort -k5 -nr
+# explicacion de la otra forma:
+# utilizamos tuberias, primero para ordenarlo por columnas y
 # con -t especificamos que deben de tener el mismo ancho y lo mandamos mediante a una tuberia para que 
 # ordene de mayor a menor, con el -k indicamos la columna que queremos ordenar en este caso la 5 y  
 # con el -rn de mayor a menor. si quitamos la r es de menor a mayor
@@ -39,5 +44,7 @@ done | column -t | sort -k5 -rn #utilizamos tuberias, primero para ordenarlo por
 # comandos utilizados
 # stat -c "%caracter" -> para mostrar un campo determinado de un fichero. para ver que caracter poner -> man stat
 # basename $directorio/fichero -> mostrar el nombre sin su ruta
+# sort -knumero -t ";" -> para ordenar por una columna, -t ";" para decir como se separan las columnas
+# -n -> ordenar numericamente
 
 # PARA VER COMANDOS PARA COMPARAR FICHEROS, ETC: man test

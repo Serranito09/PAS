@@ -54,6 +54,13 @@ touch $1/$nombre/$(tr -dc A-Za-z0-9 < /dev/urandom | head -c $((RANDOM%($4-$3+1)
 touch $1/$nombre/$(tr -dc A-Za-z0-9 < /dev/urandom | head -c $((RANDOM%($4-$3+1)+$3))).txt 
 done
 
+# LO DE CREAR LOS FICHEROS SE PUEDE HACER ASI:
+# for ext in sh key html txt
+# do
+# touch $1/$nombre/$(tr -dc A-Za-z0-9 < /dev/urandom | head -c $((RANDOM%($4-$3+1)+$3))).$ext
+# done
+
+
 #comandos utilizados:  
 # touch nos sirve para crear ficheros --> touch nombreFichero
 # mkdir para crear un directorio --> mkdir nombreDirectorio
