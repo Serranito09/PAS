@@ -1,23 +1,31 @@
 #!/bin/bash
 #Antes de todo crea un fcihero x.txt con algo escrito dentro para que lo lea y saque las palabras.
 
-if [ $# -ne 1 ]
+if [ $# -ne 1 ] #control de argumentos
 then
 	echo "Argumentos incorrectos. Inserte algo parecido a: ./ejer3.sh <fichero_de_texto>"
 	exit
 fi
 
-cd FicherosPract2
+cd FicherosPract2 #cambiamos a la carpeta donde se encuentran los ficheros necesarios para la practica
 
-#imprimo el fcihero. Los 2 primeros sed borran los puntos, las comas y las barras. El ultimo sed se recorre todo lo pasa por \L para cambiar todo a minusculas y \1 es el primer argumento.
-for i in $(cat $1|sed 's/\,//g'|sed 's/\.//g'|sed 's/\s\+/\n/g'|sed -e 's/\(.*\)/\L\1/')
-# s/ -> modo sustitución  (p/ imprimir)
-#\, -> cuando encuentre una coma
-#/  -> lo sustituye por nada(borra)
-#/g -> para todas las comas
+texto=$(sed -e 's/[.,]//g' $1 | sed 's/ /\n/g' | tr "[A-Z]" "[a-z]" | sort -u) #sustituimos los puntos y comas por nada, y los espacios por saltos de linea
+
+
+for palabra in $texto #recorremos la variable texto y guardamos en palabra
 do
-	echo "$i ${#i}" #Se imprime la i y el tamaño de i
-	
-	
-#k1 y k2 son las columnas, despues de las comas la prioridad. Después la N para numero y la R para reverse. El uniq hace que si dos palabras son iguales las elimina. Column lo que hace es seperarlo 
-done| sort -k1,1 -k2,2nr|uniq|column -t -s " "|nl #nl enumera lineas
+    
+    count=$(grep -oiw $palabra $1 | wc -l) #contamos el numero de veces que aparece la palabra buscada,para ello lo primero que hacemos es buscar la palabra en el texto,-oiw nos sirve para
+	#-o para que nos muestre solo lo que coincide en vez de la linea completa,-i para que encuentre mayusculas o minusculas,-w para indicar que tiene que ser la a tal cual y que no enuentre
+	#tambien las que se encuentre dentro de una cadena,y u na vez hecho mandamos eso mediante una tuberia a wc que cuenta el numero de lineas
+
+    echo -e " $count $palabra" #mostramos la informacion del fichero
+
+done | column -t |nl #nl sirve para numerar. 
+
+# COMANDOS UTILIZADOS
+# sort -u -> u significa unique
+# tr -> para traducir
+# nl -> para mostrar un contador
+# column -t -> para mostrar la salida en columnas separadas por un espacio
+# grep -w -> para que encuentre solo la palabra, no otras palabras que contengan esa cadena. ej: a a ac -> cuenta a 2 veces, no 3
