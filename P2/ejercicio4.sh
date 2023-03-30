@@ -10,7 +10,7 @@ echo "2) Usuarios cuyo nombre empiece y acabe con la misma letra"
 cat /etc/passwd|grep  -E "^([a-zA-Z])[^:]*\1:" #decimos que empieze por una letra, que haya en medio cualquier caracter menos : (* significa que puede haber 0, 1 o + caracteres,
 echo                                           #en este caso que no sean :), y \1 indica que debe repetirse el caracter entre parentesis antes de los :
 echo "3) Usuarios cuyo nombre no contenga la letra a/A"
-cat /etc/passwd|grep  -E "^[^aA]*:" #indicamos que no puede empezar por ningun caraccter que sea la a/A 0 o muchas veces y que el ultimo caracter sea :
+cat /etc/passwd|grep  -E -i "^[^A]*:" #indicamos que no puede empezar por ningun caraccter que sea la a/A 0 o muchas veces y que el ultimo caracter sea :
 echo
 echo "4) Usuarios con UID de 4 digitos"
 cat /etc/passwd|grep -E "^[^ ]+:[^ ]+:[0-9]{4}:" #el UID esta en el tercer apartado, con el {4} indicamos que tiene que ser 4 numeros consecutivos
