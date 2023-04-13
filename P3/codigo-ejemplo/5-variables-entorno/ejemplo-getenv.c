@@ -11,7 +11,7 @@ int main(void) {
     value = getenv("LANG");
 
     if (strstr(value, "ES")) {
-        printf("\nLa carpeta del usuario/a es: %s\n", getenv("HOME"));
+        printf("\nLa carpeta del usuario/a es: %s\n", getenv("USER"));
     } else {
         printf("\nUser's home folder is: %s\n", getenv("HOME"));
     }

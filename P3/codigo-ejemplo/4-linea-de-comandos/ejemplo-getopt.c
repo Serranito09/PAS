@@ -24,9 +24,9 @@ http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html
 
 int main(int argc, char **argv) {
 
-    bool aflag = false;
-    bool bflag = false;
-    char *cvalue = NULL;
+    bool aflag = false;//nos permiten controlar que se pasa por linea de argumentos
+    bool bflag = false;//no esperamos argumentos
+    char *cvalue = NULL;//como recoge un valor se declara en char* 
     int index;
     int c;
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     // Prueba a ejecutar el programa comentando esta linea, podrás observar como
     // se obtiene un
     // error por defecto por la salida estandar, en este caso el terminal.
-    // opterr = 0;
+     opterr = 0;
 
     // "abc:" -> busca como opciones a y b sin argumentos y c con un argumento
     // OBLIGATORIO.
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 
     /* getopt() internamente reordena los valores de argv, las primeras
      posiciones de argv corresponden a opciones conocidas ("-") y las últimas, a
-     partir de optind, a opciones no reconocidas. Por tanto, getopt va iterando
+     partir de optind, a opciones no reconocidas. Por tanto, getopt va iterando86hg
      con las opciones ("-"), y devuelve -1 si ya hemos consultado toda la linea
      de argumentos de opciones ("-"). Sino, devuelve el caracter de opción
      encontrado para caracteres validos o devuelve ? si el caracter no es valido
@@ -115,14 +115,13 @@ int main(int argc, char **argv) {
     */
 
     for (index = optind; index < argc; index++)
-        printf("Argumento \"%s\" de la línea de comandos que NO ES UNA "
-               "OPCIÓN.\n\n",
-               argv[index]);
+        printf("Argumento \"%s\" de la línea de comandos que NO ES UNA""OPCIÓN.\n\n",argv[index]);
 
     // El siguiente condicional permitiría dar un valor por defecto a la opción
     // c. Comprueba y razona si se llegaría a ejecutar y en qué circunstancias
-    if (cvalue == NULL)
+    if (cvalue == NULL){
         cvalue = "ValorPorDefecto";
+    }
 
     // Para visualizar que opciones se han activado y sus argumentos
     printf("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);

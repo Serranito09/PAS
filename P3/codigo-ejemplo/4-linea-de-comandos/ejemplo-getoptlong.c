@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     char *fvalue = NULL;
 
     /* Deshabilitar la impresión de errores por defecto */
-    /* opterr=0; */
+     opterr=0; 
     while ((c = getopt_long(argc, argv, "abd:c:f:", long_options, NULL)) != -1) {
         printf("optind: %d, optarg: %s, optopt: %c\n", optind, optarg, optopt);
 
