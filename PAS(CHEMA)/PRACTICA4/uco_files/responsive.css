@@ -1,0 +1,110 @@
+@media only screen and (max-width:1300px){
+	#interes.col-lg-2 .item a span{ font-size: 17px;  }
+	#header #titulo {  box-sizing: border-box;  clear: both;  float: none;  margin: auto;  max-width: 95%;  padding: 0;  width: 100%; text-align:center; padding-bottom:20px; }
+	#header #titulo h1 {  border: medium none;  height: auto;  margin: 0;  max-width: 100%;  padding: 15px 0;  width: auto; display: inline-block; float: none; line-height: 106px; height: 106px; padding: 0; }
+}
+
+@media only screen and (max-width:1250px){
+	#header #logos{ background: none;}
+	#header  h2.seccion{ color: #575756;  }
+	
+}
+
+
+@media only screen and (max-width:1200px){
+	#contenido-video{ margin-bottom:30px; }
+	#interes.col-lg-2 .item a span{ font-size: 20px;  }
+	#sidebar #servicios-recursos .icon-info { height: 20px; }
+	
+	
+}
+
+
+@media only screen and (max-width:1200px){
+	#menu-principal > ul > li:hover > ul, #menu-principal > ul > li:hover > ul, nav.menu-horizontal > ul > li:hover > ul, .menu-horizontal > ul > li:hover > ul{ display: none !important; }
+	#menu-principal > ul > li ul{ box-shadow:none !important; position: static; width: 100%; display: none !important; border: none; }
+	#menu-principal > ul > li ul.open{ display: block !important; opacity: 1 !important;  height: auto; }
+	#menu-principal > ul > li > ul.open > li > ul.open{ padding-left: 20px; }
+	#menu-principal > ul > li ul{ display: block;  }
+	nav.menu-horizontal > ul > li .submenu-button {  background: url(../images/down.png) top center no-repeat;  display: block;  float: right;  height: 20px; width: 20px; margin-right:22px; background-size: 10px; background-position: 10px 10px; position: absolute; right: 10px; }
+	nav.menu-horizontal > ul > li > ul > li .submenu-button{ right: 15px; }
+	nav.menu-horizontal > ul > li > ul > li >ul > li .submenu-button{ right: 20px; }
+	
+	
+	nav.menu-horizontal > ul > li:hover > ul, .menu-horizontal > ul > li:hover > ul{ display: none !important; }
+	nav.menu-horizontal > ul > li ul{ box-shadow:none !important; position: static; width: 100%; display: none !important; border: none; }
+	nav.menu-horizontal > ul > li ul.open{ display: block !important; opacity: 1 !important;  height: auto; }
+	nav.menu-horizontal > ul > li > ul.open > li > ul.open{ padding-left: 20px; }
+	nav.menu-horizontal > ul > li ul{ display: block;  }
+	nav.menu-horizontal > ul > li .submenu-button {  background: url(../images/down.png) top center no-repeat;  display: block;  float: right;  height: 20px; width: 20px; margin-right:22px; background-size: 10px; background-position: 10px 10px; position: absolute; right: 10px; }
+	nav.menu-horizontal > ul > li > ul > li .submenu-button{ right: 15px; }
+	nav.menu-horizontal > ul > li > ul > li >ul > li .submenu-button{ right: 20px; }
+	nav.menu-horizontal ul li{ float: none; border-top: solid thin #ccc; width:100%; }
+	
+	nav#menu-principal > ul > li:hover > ul, #menu-principal > ul > li:hover > ul{ display: none !important; }
+nav#menu-principal > ul > li ul{ box-shadow:none !important; position: static; width: 100%; display: none !important; border: none; }
+nav#menu-principal > ul > li ul.open{ display: block !important; opacity: 1 !important;  height: auto; }
+nav#menu-principal > ul > li > ul.open > li > ul.open{ padding-left: 20px; }
+nav#menu-principal > ul > li ul{ display: block;  }
+nav#menu-principal > ul > li .submenu-button {  background: url(../images/down.png) top center no-repeat;  display: block;  float: right;  height: 20px; width: 20px; margin-right:22px; background-size: 10px; background-position: 10px 10px; position: absolute; right: 10px; }
+nav#menu-principal > ul > li > ul > li .submenu-button{ right: 15px; }
+nav#menu-principal > ul > li > ul > li >ul > li .submenu-button{ right: 20px; }
+nav#menu-principal ul li{ float: none; border-top: solid thin #ccc; width:100%; }
+
+#menu-principal > ul > li > ul{ max-width:100% !important; }
+}
+
+@media only screen and (max-width:1120px){
+	
+	#menu-principal ul li{ float: none; clear: both; border-top: solid thin #ccc; width:100%; }
+	#menu-principal ul {  margin-bottom:0; }
+	#header h2.seccion{ position: static; width: 100%; margin: 0 auto 30px; clear: both; }
+	
+}
+
+@media only screen and (max-width:990px){
+	.nivel-2 #contenido-texto.col-lg-6{ min-height: 0; }
+	.nivel-2 #contenido-texto.col-lg-6{ border: none; padding: 0 10px; }
+}
+
+@media only screen and (max-width:900px){
+	#footer-right{ 
+	/*float: left; */
+	margin-top:0px; clear: both; }
+	#footer .redes-sociales {	padding: 10px 0 0; }
+}
+
+@media only screen and (max-width:750px){
+	--section#slider{ display: none; }
+		#header #titulo h1 { font-size: 25px; line-height: normal; height: auto; padding: 10px 0; }
+}
+
+@media only screen and (max-width:680px){
+	
+	#footer #menu-footer {  clear: both;  float: none;  padding-bottom: 15px;  padding-top: 20px;  width: 100%; }
+	#footer .redes-sociales{ 
+	/*float: left; */
+	}
+	#footer #logo-footer{ float: left; }
+	#header{ margin-top:30px; }
+}
+
+@media only screen and (max-width:650px){
+	#footer-bar{ min-height: 130px; line-height: normal; }
+}
+
+@media only screen and (max-width:460px){
+	#top-bar{ min-height: 70px; }
+}
+
+@media only screen and (max-width:400px){
+	#header #logos #logo, #logos #logo-ceia3{ margin: auto; text-align:center; padding: 0; }
+	#header #logos #logo img{ width: 100%; height: auto; padding-top:20px;  }
+	#header #logos img{ max-width: 150px;  }
+	.nivel-3 #header #logos #logo img{ padding-top:20px; }
+	#header #titulo img { display: block;  margin: auto; }
+}
+
+@media only screen and (max-width:350px){
+	#menu-principal ul li a{ font-size: 11px;  }
+}
