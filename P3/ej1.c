@@ -73,9 +73,9 @@ void imprimirUsuario(struct passwd *pw) {
 
 void imprimirGrupo(struct group *gr){
     printf("Grupo:\n");
-    printf("Nombre del grupo: %s\n", gr->gr_name);
+    printf("Nombre del grupo: %s\n", gr->gr_name);//gr no lleva punteros por que no tiene nada mas que un valor
     printf("GID: %d\n",gr->gr_gid);
-    printf("Miembros secundarios: %s\n", *gr->gr_mem);
+    printf("Miembros secundarios: %s\n", *gr->gr_mem);//gr* lleva puntero por que puede ser mas de un valor
     
 }
 void imprimirOpciones(){ //Imprime las principales opciones del programa
@@ -118,6 +118,7 @@ int main(int argc, char **argv) {
     bool mflag = false; //almacenamos el valor de m
     bool sflag = false; //almacenamos el valor de s
     bool hflag = false; //almacenamos el valor de h
+    bool errorflag = false; //almacenamos el valor si se introduce una opcion no valida
 
     while ((c = getopt_long(argc, argv, "u:g:amsh", long_options, NULL)) != -1) { //en el while se activan las flags
         //ponemos : para que se active la flag al tener un argumento
@@ -146,6 +147,10 @@ int main(int argc, char **argv) {
                 hflag=true;
                 break;
 
+            case '?':
+                errorflag=true; //se activa si se introduce una opcion no valida para que no entre en el caso de que no se pasen argumentos (linea 265)
+
+
         }
     }
     
@@ -158,7 +163,7 @@ int main(int argc, char **argv) {
     //entramos a este if si se activa el valor de u
     if((uvalue != NULL)&&(gvalue == NULL)&&(hflag == false)&&(aflag == false)&&(sflag == false)){
         if(isdigit(*uvalue)!=0){ //comprobamos que uvalue sea el uid y no el login
-            uid=atoi(uvalue); 
+            uid=atoi(uvalue); //convertimos el uid a int
             if((pw=getpwuid(uid))==NULL){ //si no existe el uid
                 printf("Error al intentar acceder a la información de usuario.\n");
                 exit(-1);
@@ -167,7 +172,7 @@ int main(int argc, char **argv) {
                 imprimirUsuario(pw); //si existe el uid, imprimimos la info
             }
         } else { //si uvalue es el login
-            lgn=uvalue;
+            lgn=uvalue;//guardamos el login en lgn
             if((pw=getpwnam(lgn))==NULL){ //si no existe el login
                 printf("Error al intentar acceder a la información de usuario.\n");
                 exit(-1);
@@ -200,7 +205,6 @@ int main(int argc, char **argv) {
             }
         } else { //si gvalue es el nombre del grupo
             gname=gvalue;
-            printf("hola");
             if((gr=getgrnam(gname))==NULL){ //si no existe el grupo
                 printf("Error al intentar acceder a la información de usuario.\n");
                 exit(-1);
@@ -258,5 +262,34 @@ int main(int argc, char **argv) {
         exit(0);
     }
 
-  imprimirOpciones();       
+    //entramos a este if si no se activa ningun valor
+    if((uvalue == NULL)&&(gvalue == NULL)&&(hflag == false)&&(aflag == false)&&(mflag == false)&&(sflag == false)&&(errorflag == false)){
+        if((lgn=getenv("USER"))==NULL || (pw=getpwnam(lgn))==NULL) { 
+            printf("Error al intentar acceder a la información de usuario.\n");
+            exit(-1);
+        } else {
+            imprimirUsuario(pw); //si existe el login, imprimimos la info
+        }
+        if((gr=getgrgid(pw->pw_gid))==NULL){ //si no existe el gid
+            printf("Error al intentar acceder a la información de grupo.\n");
+            exit(-1);
+        } else {
+            imprimirGrupo(gr); //si existe el gid, imprimimos la info
+            exit(0);
+        }
+    }
+    
+    imprimirOpciones();       
 }
+
+
+
+/*
+  while ((pw = getpwent()) != NULL) {
+        printf("Nombre de usuario: %s\n", pw->pw_name);
+        printf("UID: %d\n", pw->pw_uid);
+        printf("GID: %d\n", pw->pw_gid);
+        printf("Directorio de inicio: %s\n", pw->pw_dir);
+        printf("Shell predeterminada: %s\n", pw->pw_shell);
+    }
+    */
