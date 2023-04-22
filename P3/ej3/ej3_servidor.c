@@ -21,25 +21,27 @@ void funcionLog(char *);
 FILE *fLog = NULL;
 
 int main(int argc, char **argv) {
-    // Cola del servidor
-    mqd_t mq_server;
-    // Cola del cliente
-    mqd_t mq_client;
-    // Atributos de la cola
-    struct mq_attr attr;
-    // Buffer para intercambiar mensajes
+
+    mqd_t mq_server; // Cola del servidor
+    mqd_t mq_client; // Cola del cliente
+
+    struct mq_attr attr; // Atributos de la cola
+
+    // Buffers para intercambiar mensajes
     char readbuffer[MAX_SIZE];
     char writebuffer[MAX_SIZE];
-    // flag que indica cuando hay que parar. Se escribe palabra exit
-    int must_stop = 0;
+
+    int must_stop = 0; // flag que indica cuando hay que parar. Se escribe palabra exit
+    
     // Inicializar los atributos de la cola
     attr.mq_maxmsg = 10;        // Maximo número de mensajes
     attr.mq_msgsize = MAX_SIZE; // Maximo tamaño de un mensaje
+    
     // Nombre para la cola
     char serverQueue[100];
     char clientQueue[100];
 
-    // Nombre para la cola. Al concatenar el login sera unica en un sistema compartido.
+    // Nombre para la cola del servidor. Al concatenar el login sera unica en un sistema compartido.
     sprintf(serverQueue, "%s-%s", SERVER_QUEUE, getenv("USER"));
     printf("[Servidor]: El nombre de la cola es: %s\n", serverQueue);
 
@@ -54,7 +56,7 @@ int main(int argc, char **argv) {
     }
     printf("[Servidor]: El descriptor de la cola del servidor es: %d\n", (int)mq_server);
 
-    //Abrir la cola del cliente
+    //Nombre de la cola del cliente
     sprintf(clientQueue, "%s-%s", CLIENT_QUEUE, getenv("USER"));
     printf("[Servidor]: El nombre de la cola del cliente es: %s\n", clientQueue);
 
@@ -74,23 +76,20 @@ int main(int argc, char **argv) {
 
         // Recibir el mensaje
         bytes_read = mq_receive(mq_server, readbuffer, MAX_SIZE, NULL);
-        // Comprar que la recepción es correcta (bytes leidos no son negativos)
+
+        // Comprobar que la recepción es correcta (bytes leidos no son negativos)
         if (bytes_read < 0) {
             perror("Error al recibir el mensaje");
             funcionLog("Error al recibir el mensaje");
             exit(-1);
         }
-        //sprintf sirve para escribir en un buffer (fichero log)
-        sprintf(writebuffer,"Número de caracteres leídos: %ld",(strlen(readbuffer)-1));
-
+        
         if (mq_send(mq_client, writebuffer, MAX_SIZE, 0) != 0) {
             perror("Error al enviar el mensaje");
             funcionLog("Error al enviar el mensaje");
             exit(-1);
         }
-
-        funcionLog(writebuffer);
-
+        
         // Cerrar la cadena
         // buffer[bytes_read] = '\0';
 
@@ -99,6 +98,10 @@ int main(int argc, char **argv) {
             must_stop = 1;
         else
             printf("Recibido el mensaje: %s\n", readbuffer);
+            //sprintf sirve para escribir en un buffer (fichero log)
+            sprintf(writebuffer,"Número de caracteres leídos: %ld",(strlen(readbuffer)-1));
+            funcionLog(writebuffer);
+
     } while (!must_stop); // Iterar hasta que llegue el código de salida, es decir, la palabra exit
     funcionLog("exit");
 
