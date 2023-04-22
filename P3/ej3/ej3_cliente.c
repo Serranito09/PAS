@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     sprintf(clientQueue, "%s-%s", CLIENT_QUEUE, getenv("USER"));
     printf("[Cliente]: El nombre de la cola del cliente es: %s\n", clientQueue);
 
-    mq_client = mq_open(clientQueue, O_WRONLY);
+    mq_client = mq_open(clientQueue, O_RDONLY);
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
     if (mq_client == (mqd_t)-1) {
         perror("Error al abrir la cola del servidor");

@@ -107,11 +107,7 @@ int main(int argc, char **argv) {
             funcionLog("Error al recibir el mensaje");
             exit(-1);
         }
-    if (mq_send(mq_client, WriteBuffer, MAX_SIZE, 0) != 0) {
-            perror("Error al enviar el mensaje");
-            funcionLog("Error al enviar el mensaje");
-            exit(-1);
-        }
+
         // Comprobar el fin del bucle
         if(strncmp(ReadBuffer, MSG_STOP, strlen(MSG_STOP)) == 0){
             must_stop = 1;
@@ -119,6 +115,11 @@ int main(int argc, char **argv) {
         
         printf("Recibido el mensaje: %s", ReadBuffer);
         sprintf(WriteBuffer,"Número de caracteres leídos: %ld",(strlen(ReadBuffer)-1));
+        if (mq_send(mq_client, WriteBuffer, MAX_SIZE, 0) != 0) {
+            perror("Error al enviar el mensaje");
+            funcionLog("Error al enviar el mensaje");
+            exit(-1);
+        }
         funcionLog(WriteBuffer);
         
     } while (!must_stop); // Iterar hasta que llegue el código de salida, es decir, la palabra exit
