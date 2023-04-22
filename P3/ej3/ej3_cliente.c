@@ -15,52 +15,56 @@ recogida por teclado, mientras que el valor de esa cadena sea distinto a la pala
 
 // Prototipo de funcion
 void funcionLog(char *);
-// Apuntador al fichero de log. No se usa en este ejemplo, pero le servira en ejercicio resumen
+// Apuntador al fichero de log.
 FILE *fLog = NULL;
 
 int main(int argc, char **argv) {
-    // Cola del servidor
-    mqd_t mq_server;
-    // Cola del cliente
-    mqd_t mq_client;
-    // Buffer para intercambiar mensajes
+    
+    mqd_t mq_server; // Cola del servidor
+    mqd_t mq_client; // Cola del cliente
+
+    // Buffers para intercambiar mensajes
     char readbuffer[MAX_SIZE];
     char writebuffer[MAX_SIZE];
+
     // Nombre para las colas
     char serverQueue[100];
     char clientQueue[100];
-
-
-    // Abrir la cola del servidor. La cola CLIENT_QUEUE le servira en ejercicio resumen.
-    // No es necesario crearla si se lanza primero el servidor, sino el programa no funciona.
 
     // Nombre para la cola del servidor. Al concatenar el login sera unica en un sistema compartido.
     sprintf(serverQueue, "%s-%s", SERVER_QUEUE, getenv("USER"));
     printf("[Cliente]: El nombre de la cola del servidor es: %s\n", serverQueue);
 
+    // Abrir la cola del servidor. La cola CLIENT_QUEUE le servira en ejercicio resumen.
+    // No es necesario crearla si se lanza primero el servidor, sino el programa no funciona.
     mq_server = mq_open(serverQueue, O_WRONLY);
+
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
     if (mq_server == (mqd_t)-1) {
         perror("Error al abrir la cola del servidor");
         exit(-1);
     }
-    printf("[Cliente]: El descriptor de la cola es: %d\n", (int)mq_server);
+    printf("[Cliente]: El descriptor de la cola del servidor es: %d\n", (int)mq_server);
 
     // Nombre para la cola del cliente
     sprintf(clientQueue, "%s-%s", CLIENT_QUEUE, getenv("USER"));
     printf("[Cliente]: El nombre de la cola del cliente es: %s\n", clientQueue);
 
+    // Abrir la cola del cliente
     mq_client = mq_open(clientQueue, O_WRONLY);
+
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
     if (mq_client == (mqd_t)-1) {
         perror("Error al abrir la cola del servidor");
         exit(-1);
     }
-    printf("[Cliente]: El descriptor de la cola es: %d\n", (int)mq_client);
+    printf("[Cliente]: El descriptor de la cola del cliente es: %d\n", (int)mq_client);
 
+    // Bucle de envío de mensajes
     printf("Mandando mensajes al servidor (escribir \"%s\" para parar):\n", MSG_STOP);
     do {
         printf("> ");
+
         ssize_t bytes_read;
 
         /* Leer por teclado. Según la documentación, fgets lo hace de esta manera:
@@ -76,12 +80,16 @@ int main(int argc, char **argv) {
             exit(-1);
         }
 
+        // Recibir y comprobar si el mensaje se recibe
         bytes_read=mq_receive(mq_client, readbuffer, MAX_SIZE, NULL);
+
         if (bytes_read < 0) {
             perror("Error al recibir el mensaje");
             exit(-1);
         }
+
         printf("Recibido: %s\n", readbuffer);
+
         // Iterar hasta escribir el código de salida
     } while(strcmp(writebuffer, MSG_STOP));
     
