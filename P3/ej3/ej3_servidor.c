@@ -47,6 +47,8 @@ int main(int argc, char **argv) {
 
     // Crear la cola de mensajes del servidor. La cola CLIENT_QUEUE le servira en ejercicio resumen
     mq_server = mq_open(serverQueue, O_CREAT | O_RDONLY, 0644, &attr);
+    /*0644 son permisos de lectura y escritura para el propietario
+y de sólo lectura para el grupo y para otros*/
     // mq_server = mq_open(SERVER_QUEUE, O_CREAT | O_RDONLY, 0644, &attr);
 
     if (mq_server == (mqd_t)-1) {
@@ -84,12 +86,6 @@ int main(int argc, char **argv) {
             exit(-1);
         }
         
-        if (mq_send(mq_client, writebuffer, MAX_SIZE, 0) != 0) {
-            perror("Error al enviar el mensaje");
-            funcionLog("Error al enviar el mensaje");
-            exit(-1);
-        }
-        
         // Cerrar la cadena
         // buffer[bytes_read] = '\0';
 
@@ -101,7 +97,12 @@ int main(int argc, char **argv) {
             //sprintf sirve para escribir en un buffer (fichero log)
             sprintf(writebuffer,"Número de caracteres leídos: %ld",(strlen(readbuffer)-1));
             funcionLog(writebuffer);
-
+            
+        if (mq_send(mq_client, writebuffer, MAX_SIZE, 0) != 0) {
+            perror("Error al enviar el mensaje");
+            funcionLog("Error al enviar el mensaje");
+            exit(-1);
+        }
     } while (!must_stop); // Iterar hasta que llegue el código de salida, es decir, la palabra exit
     funcionLog("exit");
 
@@ -167,3 +168,4 @@ void funcionLog(char *mensaje) {
     fclose(fLog);
     fLog = NULL;
 }
+

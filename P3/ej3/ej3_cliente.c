@@ -12,24 +12,95 @@ recogida por teclado, mientras que el valor de esa cadena sea distinto a la pala
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <signal.h>
 
 // Prototipo de funcion
 void funcionLog(char *);
+
 // Apuntador al fichero de log.
 FILE *fLog = NULL;
 
+mqd_t mq_server; // Cola del servidor
+mqd_t mq_client; // Cola del cliente
+
+// Buffers para intercambiar mensajes
+char readbuffer[MAX_SIZE];
+char writebuffer[MAX_SIZE];
+
+// Nombre para las colas
+char serverQueue[100];
+char clientQueue[100];
+
+void manejadorSIGINT(int signal){
+    printf(" Capturé la señal SIGINT, saliendo...");
+    sprintf(writebuffer, "Capturada la señal con identificador: %d", signal);
+	funcionLog(writebuffer);
+	sprintf(writebuffer, "exit\n");
+
+    if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) {
+        perror("Error al enviar el mensaje");
+        funcionLog("Error al enviar el mensaje");
+        exit(-1);
+    }
+
+    funcionLog(writebuffer);
+    printf("\n");
+
+    // Cerrar la cola del servidor y del cliente
+    if(mq_close(mq_server) == (mqd_t)-1) {
+        perror("Error al cerrar la cola del servidor");
+        funcionLog("Error al cerrar la cola del servidor");
+        exit(-1);
+    }
+    if(mq_close(mq_client) == (mqd_t)-1) {
+        perror("Error al cerrar la cola del cliente");
+        funcionLog("Error al cerrar la cola del cliente");
+        exit(-1);
+    }
+    exit(0);
+}
+
+void manejadorSIGTERM(int signal){
+    printf("Capturé la señal SIGTERM, saliendo...");
+    sprintf(writebuffer, "Capturada la señal con identificador: %d", signal);
+	funcionLog(writebuffer);
+	sprintf(writebuffer, "exit\n");
+
+    if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) {
+        perror("Error al enviar el mensaje");
+        funcionLog("Error al enviar el mensaje");
+        exit(-1);
+    }
+
+    funcionLog(writebuffer);
+    printf("\n");
+
+    // Cerrar la cola del servidor y del cliente
+    if(mq_close(mq_server) == (mqd_t)-1) {
+        perror("Error al cerrar la cola del servidor");
+        funcionLog("Error al cerrar la cola del servidor");
+        exit(-1);
+    }
+    if(mq_close(mq_client) == (mqd_t)-1) {
+        perror("Error al cerrar la cola del cliente");
+        funcionLog("Error al cerrar la cola del cliente");
+        exit(-1);
+    }
+    exit(0);
+}
+
+
 int main(int argc, char **argv) {
-    
-    mqd_t mq_server; // Cola del servidor
-    mqd_t mq_client; // Cola del cliente
 
-    // Buffers para intercambiar mensajes
-    char readbuffer[MAX_SIZE];
-    char writebuffer[MAX_SIZE];
+    if(signal(SIGINT, manejadorSIGINT)==SIG_ERR){
+        printf("No puedo asociar la señal SIGINT al manejador!\n");
+        funcionLog("No puedo asociar la señal SIGINT al manejador!\n");
+    }
 
-    // Nombre para las colas
-    char serverQueue[100];
-    char clientQueue[100];
+    if(signal(SIGTERM, manejadorSIGTERM)==SIG_ERR){
+        printf("No puedo asociar la señal SIGTERM al manejador!\n");
+        funcionLog("No puedo asociar la señal SIGTERM al manejador!\n");
+    }
 
     // Nombre para la cola del servidor. Al concatenar el login sera unica en un sistema compartido.
     sprintf(serverQueue, "%s-%s", SERVER_QUEUE, getenv("USER"));
@@ -42,6 +113,7 @@ int main(int argc, char **argv) {
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
     if (mq_server == (mqd_t)-1) {
         perror("Error al abrir la cola del servidor");
+        funcionLog("Error al abrir la cola del servidor");
         exit(-1);
     }
     printf("[Cliente]: El descriptor de la cola del servidor es: %d\n", (int)mq_server);
@@ -50,16 +122,13 @@ int main(int argc, char **argv) {
     sprintf(clientQueue, "%s-%s", CLIENT_QUEUE, getenv("USER"));
     printf("[Cliente]: El nombre de la cola del cliente es: %s\n", clientQueue);
 
-<<<<<<< HEAD
-    mq_client = mq_open(clientQueue, O_RDONLY);
-=======
     // Abrir la cola del cliente
-    mq_client = mq_open(clientQueue, O_WRONLY);
+    mq_client = mq_open(clientQueue, O_RDONLY);
 
->>>>>>> 662303e91262c5fa22a08416e8684d1f6b6046ff
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
     if (mq_client == (mqd_t)-1) {
-        perror("Error al abrir la cola del servidor");
+        perror("Error al abrir la cola del cliente");
+        funcionLog("Error al abrir la cola del cliente");
         exit(-1);
     }
     printf("[Cliente]: El descriptor de la cola del cliente es: %d\n", (int)mq_client);
@@ -81,6 +150,7 @@ int main(int argc, char **argv) {
         // Enviar y comprobar si el mensaje se manda
         if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) {
             perror("Error al enviar el mensaje");
+            funcionLog("Error al enviar el mensaje");
             exit(-1);
         }
 
@@ -89,24 +159,27 @@ int main(int argc, char **argv) {
 
         if (bytes_read < 0) {
             perror("Error al recibir el mensaje");
+            funcionLog("Error al recibir el mensaje");
             exit(-1);
         }
 
         printf("Recibido: %s\n", readbuffer);
 
         // Iterar hasta escribir el código de salida
-    } while(strcmp(writebuffer, MSG_STOP));
+    } while(strncmp(writebuffer, MSG_STOP, strlen(MSG_STOP)));
     
 
     // Cerrar la cola del servidor
     if (mq_close(mq_server) == (mqd_t)-1) {
         perror("Error al cerrar la cola del servidor");
+        funcionLog("Error al cerrar la cola del servidor");
         exit(-1);
     }
 
     // Cerrar la cola del cliente
     if (mq_close(mq_client) == (mqd_t)-1) {
         perror("Error al cerrar la cola del cliente");
+        funcionLog("Error al cerrar la cola del cliente");
         exit(-1);
     }
     return 0;
@@ -147,3 +220,14 @@ void funcionLog(char *mensaje) {
     fclose(fLog);
     fLog = NULL;
 }
+
+
+
+
+/*
+void mi_manejador_sigfpe(int signal) {
+    printf("Capturé la señal DIVISIÓN por cero (%d), divisor establecido a 1\n", signal);
+    printf("Division=%d\n", (dividendo / 1));
+    exit(1);
+}
+*/
