@@ -10,13 +10,13 @@ int main(){
 
     pid_t pid; // Permite realizar el fork
 	int flag, status; 
-	int result; //Permite gestionar errores
-	float random1;
-	float random2;
-	float sum;
+	int res; //Permite gestionar errores
+	float aleatorio1;
+	float aleatorio2;
+	float suma;
 	int fildes[2]; //Extremos de la tubería
 
-	result=pipe(fildes); //Creacion de la tuberia
+	res=pipe(fildes); //Creacion de la tuberia
 
 	if(status==-1) { //Comprobacion de errores
 		printf("\nERROR en la creacion.\n");
@@ -35,12 +35,12 @@ int main(){
 	    case 0:
 	    	printf("[HIJO]: Mi PID es %d y mi PPID es %d\n", getpid(), getppid()); //Informacion acerca del hijo
 	    	close(fildes[1]); //Cerramos el extremo usado
-            result=read(fildes[0], &sum, sizeof(int));//Recibimos mensaje
-            if(result!= sizeof(int)) { //Se comprueba mensaje
+            res = read(fildes[0], &suma, sizeof(int));//Recibimos mensaje
+            if(res != sizeof(int)) { //Se comprueba mensaje
 	    		printf("\n[HIJO]: ERROR al leer de la tubería...\n");//Mensaje de error
 	    		exit(EXIT_FAILURE);//Error en la lectura de la tubería
 	    	}
-            printf("[HIJO]: El resultado de la suma leido de la tubería es: %f.\n", sum); //Imprimimos el valor enviado		
+            printf("[HIJO]: El resultado de la suma leido de la tubería es: %f.\n", suma); //Imprimimos el valor enviado		
 	    	printf("[HIJO]: Tubería cerrada ...\n"); //Cerramos la tuberia
 	    	close(fildes[0]);//Cerramos el extremo usado
 	    	break;
@@ -48,13 +48,13 @@ int main(){
 	    default:
 	    	printf("[PADRE]: Mi PID es %d y el PID de mi hijo es %d \n", getpid(),pid); //Informacion acerca del padre
 	    	close(fildes[0]); //Cerramos el extremo usado
-	    	srand(time(NULL)); //Inicializacion del generador de numeros aleatorios
-            random1=rand()%5000;//Generacion de los numeros aleatorios
-	    	random2=rand()%5000;
-	    	sum=random1+random2;
-            printf("[PADRE]: Escribo el resultado de la suma de los números aleatorios %f y %f en la tubería...\n", random1, random2); //Se escribe en la tuberia
-	    	result=write(fildes[1], &sum, sizeof(int)); //Se envía el mensaje
-	    	if(result!=sizeof(int)) { //Comprobacion del mensaje
+	    	srand(time(NULL)); //Generacion de los numeros aleatorios
+            aleatorio1=rand()%5000;
+	    	aleatorio2=rand()%5000;
+	    	suma=aleatorio1+aleatorio2;
+            printf("[PADRE]: Escribo el resultado de la suma de los números aleatorios %f y %f en la tubería...\n", aleatorio1, aleatorio2); //Se escribe en la tuberia
+	    	res = write(fildes[1], &suma, sizeof(int)); //Se envía el mensaje
+	    	if(res != sizeof(int)) { //Comprobacion del mensaje
 	    		printf("\n[PADRE]: ERROR al escribir en la tubería...\n");
 	    		exit(EXIT_FAILURE);
 	    	}

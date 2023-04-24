@@ -1,0 +1,5 @@
+[2023-04-24, 17:51:27] ==> Error al abrir la cola del servidor
+[2023-04-24, 18:09:32] ==> Error al abrir la cola del servidor
+[2023-04-24, 18:09:36] ==> Error al abrir la cola del servidor
+[2023-04-24, 18:09:46] ==> Error al abrir la cola del servidor
+[2023-04-24, 18:09:53] ==> Error al abrir la cola del servidor
