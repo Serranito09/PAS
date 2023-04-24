@@ -15,9 +15,10 @@ Lo hace mientras que el valor de esa cadena sea distinto a la palabra exit.
 #include <sys/types.h>
 #include <time.h>
 
-// Prototipo de funcionn
+// Prototipo de funcion auxiliar
 void funcionLog(char *);
-// Apuntador al fichero de log.  No se usa en este ejemplo, pero le servira en ejercicio resumen
+
+// Apuntador al fichero de log. Se usa para que la funcion auxiliar pueda escribir en el fichero
 FILE *fLog = NULL;
 
 int main(int argc, char **argv) {
@@ -48,7 +49,8 @@ int main(int argc, char **argv) {
     // Crear la cola de mensajes del servidor. La cola CLIENT_QUEUE le servira en ejercicio resumen
     mq_server = mq_open(serverQueue, O_CREAT | O_RDONLY, 0644, &attr);
     /*0644 son permisos de lectura y escritura para el propietario
-y de sólo lectura para el grupo y para otros*/
+    y de sólo lectura para el grupo y para otros*/
+
     // mq_server = mq_open(SERVER_QUEUE, O_CREAT | O_RDONLY, 0644, &attr);
 
     if (mq_server == (mqd_t)-1) {
@@ -56,6 +58,7 @@ y de sólo lectura para el grupo y para otros*/
         funcionLog("Error al abrir la cola del servidor");
         exit(-1);
     }
+
     printf("[Servidor]: El descriptor de la cola del servidor es: %d\n", (int)mq_server);
 
     //Nombre de la cola del cliente
@@ -70,6 +73,7 @@ y de sólo lectura para el grupo y para otros*/
         funcionLog("Error al abrir la cola del cliente");
         exit(-1);
     }
+    
     printf("[Servidor]: El descriptor de la cola del cliente es: %d\n\n", (int)mq_client);
 
     do {

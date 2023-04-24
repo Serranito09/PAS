@@ -31,19 +31,19 @@ char writebuffer[MAX_SIZE];
 char serverQueue[100];
 char clientQueue[100];
 
-void manejadorSIGINT(int signal){
+void manejadorSIGINT(int signal){ // Funcion manejadora de la señal SIGINT
     printf(" Capturé la señal SIGINT, saliendo...");
-    sprintf(writebuffer, "Capturada la señal con identificador: %d", signal);
-	funcionLog(writebuffer);
-	sprintf(writebuffer, "exit\n");
+    sprintf(writebuffer, "Capturada la señal con identificador: %d", signal); // Guardamos en el buffer el mensaje que queremos enviar
+	funcionLog(writebuffer); // Escribimos en el fichero de log
+	sprintf(writebuffer, "exit\n"); // Guardamos en el buffer el mensaje que queremos enviar
 
-    if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) {
+    if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) { // Enviamos el mensaje al servidor
         perror("Error al enviar el mensaje");
         funcionLog("Error al enviar el mensaje");
         exit(-1);
     }
 
-    funcionLog(writebuffer);
+    funcionLog(writebuffer); // Escribimos en el fichero de log
     printf("\n");
 
     // Cerrar la cola del servidor y del cliente
@@ -52,27 +52,29 @@ void manejadorSIGINT(int signal){
         funcionLog("Error al cerrar la cola del servidor");
         exit(-1);
     }
+
     if(mq_close(mq_client) == (mqd_t)-1) {
         perror("Error al cerrar la cola del cliente");
         funcionLog("Error al cerrar la cola del cliente");
         exit(-1);
     }
+
     exit(0);
 }
 
-void manejadorSIGTERM(int signal){
+void manejadorSIGTERM(int signal){ // Funcion manejadora de la señal SIGTERM
     printf("Capturé la señal SIGTERM, saliendo...");
-    sprintf(writebuffer, "Capturada la señal con identificador: %d", signal);
-	funcionLog(writebuffer);
-	sprintf(writebuffer, "exit\n");
+    sprintf(writebuffer, "Capturada la señal con identificador: %d", signal); // Guardamos en el buffer el mensaje que queremos enviar
+	funcionLog(writebuffer); // Escribimos en el fichero de log
+	sprintf(writebuffer, "exit\n"); // Guardamos en el buffer el mensaje que queremos enviar
 
-    if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) {
+    if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) { // Enviamos el mensaje al servidor
         perror("Error al enviar el mensaje");
         funcionLog("Error al enviar el mensaje");
         exit(-1);
     }
 
-    funcionLog(writebuffer);
+    funcionLog(writebuffer); // Escribimos en el fichero de log
     printf("\n");
 
     // Cerrar la cola del servidor y del cliente
@@ -81,25 +83,27 @@ void manejadorSIGTERM(int signal){
         funcionLog("Error al cerrar la cola del servidor");
         exit(-1);
     }
+
     if(mq_close(mq_client) == (mqd_t)-1) {
         perror("Error al cerrar la cola del cliente");
         funcionLog("Error al cerrar la cola del cliente");
         exit(-1);
     }
+
     exit(0);
 }
 
 
 int main(int argc, char **argv) {
 
-    if(signal(SIGINT, manejadorSIGINT)==SIG_ERR){
-        printf("No puedo asociar la señal SIGINT al manejador!\n");
-        funcionLog("No puedo asociar la señal SIGINT al manejador!\n");
+    if(signal(SIGINT, manejadorSIGINT)==SIG_ERR){ // Asociamos la señal SIGINT a la funcion manejadora
+        printf("No puedo asociar la señal SIGINT al manejador\n");
+        funcionLog("No puedo asociar la señal SIGINT al manejador\n");
     }
 
-    if(signal(SIGTERM, manejadorSIGTERM)==SIG_ERR){
-        printf("No puedo asociar la señal SIGTERM al manejador!\n");
-        funcionLog("No puedo asociar la señal SIGTERM al manejador!\n");
+    if(signal(SIGTERM, manejadorSIGTERM)==SIG_ERR){ // Asociamos la señal SIGTERM a la funcion manejadora
+        printf("No puedo asociar la señal SIGTERM al manejador\n");
+        funcionLog("No puedo asociar la señal SIGTERM al manejador\n");
     }
 
     // Nombre para la cola del servidor. Al concatenar el login sera unica en un sistema compartido.
@@ -111,7 +115,7 @@ int main(int argc, char **argv) {
     mq_server = mq_open(serverQueue, O_WRONLY);
 
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
-    if (mq_server == (mqd_t)-1) {
+    if (mq_server == (mqd_t)-1) { // Comprobamos que se haya abierto correctamente
         perror("Error al abrir la cola del servidor");
         funcionLog("Error al abrir la cola del servidor");
         exit(-1);
@@ -126,7 +130,7 @@ int main(int argc, char **argv) {
     mq_client = mq_open(clientQueue, O_RDONLY);
 
     // mq_server = mq_open(SERVER_QUEUE, O_WRONLY);
-    if (mq_client == (mqd_t)-1) {
+    if (mq_client == (mqd_t)-1) { // Comprobamos que se haya abierto correctamente
         perror("Error al abrir la cola del cliente");
         funcionLog("Error al abrir la cola del cliente");
         exit(-1);
@@ -145,7 +149,7 @@ int main(int argc, char **argv) {
         or the end-of-file is reached, whichever comes first.
         Automáticamente fgets inserta el fin de cadena '\0'
         */
-        fgets(writebuffer, MAX_SIZE, stdin);
+        fgets(writebuffer, MAX_SIZE, stdin); // Leemos el mensaje que queremos enviar
 
         // Enviar y comprobar si el mensaje se manda
         if (mq_send(mq_server, writebuffer, MAX_SIZE, 0) != 0) {

@@ -8,11 +8,6 @@
 
 #endif 
 
-
-
-
-
-
 /*
 Los ficheros de código de este ejercicio se llamarán ((ej3 servidor.c)), ((ej3 cliente.c))
 y ((ej3 common.h)).
@@ -89,5 +84,3 @@ cheros common.h, servidor.c y cliente.c que se le han proporcionado como ejemplo
     Se deberá cerrar, en caso de que estuvieran abiertas, aquellas colas que se estén
     utilizando y el fichero de log.
 */
-
-
